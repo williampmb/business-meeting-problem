@@ -17,7 +17,7 @@ public class BusinessMeetingProblem {
     public static void main(String[] args) {
         Room r = Room.getInstance();
         for (int i = 1; i < 11; i++) {
-            People p = new People(i);
+            Person p = new Person(i);
             new Thread(p).start();
         }
 

@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  *
  * @author willi
  */
-public class People implements Runnable {
+public class Person implements Runnable {
 
     private boolean inside = false;
     int id;
@@ -29,7 +29,7 @@ public class People implements Runnable {
 
     Lock lock = new ReentrantLock();
 
-    public People(int id) {
+    public Person(int id) {
         this.id = id;
         name = "Thread " + this.id;
         this.free = false;
@@ -54,7 +54,7 @@ public class People implements Runnable {
             System.out.println(name + " Trying to leave the room");
             leaveRoom(r);
         } catch (InterruptedException ex) {
-            Logger.getLogger(People.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Person.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
@@ -77,7 +77,7 @@ public class People implements Runnable {
         return 'W';
     }
 
-    boolean itIsPossibleTradeCardWith(People p) {
+    boolean itIsPossibleTradeCardWith(Person p) {
         if (this.id == p.id || !p.isFree()) {
             return false;
         }
@@ -132,7 +132,7 @@ public class People implements Runnable {
         this.name = name;
     }
 
-    void tradeCard(People toTrade) throws InterruptedException {
+    void tradeCard(Person toTrade) throws InterruptedException {
         cards.add(new Card(toTrade.id, toTrade.gender));
         Thread.sleep(2000);
     }

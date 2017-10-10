@@ -18,7 +18,7 @@ public class Room {
 
     private final int capacity;
     private static Room room;
-    private List<People> inside = new ArrayList<People>();
+    private List<Person> inside = new ArrayList<Person>();
 
     //locks
     private Object doorMan = new Object();
@@ -35,7 +35,7 @@ public class Room {
         this.capacity = cap;
     }
 
-    boolean tryEnterIntoRoom(People guest) {
+    boolean tryEnterIntoRoom(Person guest) {
         //it avoids two threads trying to access the same variable with synch method.
         //if the room is full, it waits until it gets more space.
         synchronized (doorMan) {
@@ -55,7 +55,7 @@ public class Room {
         return true;
     }
 
-    void leaveTheRoom(People guest) {
+    void leaveTheRoom(Person guest) {
         synchronized (doorMan) {
             inside.remove(guest);
             notifyAll();
@@ -63,10 +63,10 @@ public class Room {
         System.out.println(guest.name + " Left the ROOM. Opening a spot");
     }
 
-    void LookForTradeCards(People guest) {
-        People toTrade = null;
+    void LookForTradeCards(Person guest) {
+        Person toTrade = null;
         synchronized (checkDisponibility) {
-            for (People p : inside) {
+            for (Person p : inside) {
                 boolean trade = guest.itIsPossibleTradeCardWith(p);
                 if (trade) {
                     toTrade = p;
