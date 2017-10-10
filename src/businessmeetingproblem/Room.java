@@ -7,6 +7,8 @@ package businessmeetingproblem;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,6 +24,7 @@ public class Room {
 
     //locks
     private Object doorMan = new Object();
+    Lock lock = new ReentrantLock();
     private Object checkDisponibility = new Object();
 
     static Room getInstance() {
@@ -42,14 +45,21 @@ public class Room {
             while (inside.size() >= capacity) {
                 try {
                     System.out.println("Room FULL " + guest.name);
-                    wait();
+                    doorMan.wait();
                     System.out.println(guest.name + " Trying again");
                 } catch (InterruptedException ex) {
                     Logger.getLogger(Room.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            System.out.println(guest.name + " Have Entered in the ROOM");
-            inside.add(guest);
+            System.out.println(guest.name + " Have Entered");
+            lock.lock();
+            try {
+                inside.add(guest);
+                whoIsThere();
+            } finally {
+                lock.unlock();
+            }
+            guest.setFree(true);
         }
 
         return true;
@@ -57,38 +67,72 @@ public class Room {
 
     void leaveTheRoom(Person guest) {
         synchronized (doorMan) {
-            inside.remove(guest);
-            notifyAll();
+            lock.lock();
+            try {
+                inside.remove(guest);
+                whoIsThere();
+            } finally {
+                lock.unlock();
+            }
+            doorMan.notifyAll();
+
         }
+
         System.out.println(guest.name + " Left the ROOM. Opening a spot");
     }
 
     void LookForTradeCards(Person guest) {
         Person toTrade = null;
-        synchronized (checkDisponibility) {
+        boolean trade = false;
+        // synchronized (checkDisponibility) {
+        lock.lock();
+        try {
             for (Person p : inside) {
-                boolean trade = guest.itIsPossibleTradeCardWith(p);
+                trade = guest.itIsPossibleTradeCardWith(p);
                 if (trade) {
                     toTrade = p;
+                    toTrade.setFree(false);
+                    guest.setFree(false);
                     break;
                 }
             }
-            toTrade.setFree(false);
-            guest.setFree(false);
-        }
+            if (toTrade != null) {
+                synchronized (toTrade) {
+                    try {
+                        guest.tradeCard(toTrade);
+                        toTrade.tradeCard(guest);
+                        Thread.sleep(2000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Room.class.getName()).log(Level.SEVERE, null, ex);
+                    } finally {
+                        toTrade.setFree(true);
+                        guest.setFree(true);
+                        toTrade.notifyAll();
+                    }
+                }
 
-        if (toTrade != null) {
-            try {
-                guest.tradeCard(toTrade);
-                toTrade.tradeCard(guest);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(Room.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
-                toTrade.setFree(true);
-                guest.setFree(true);
             }
-
+            // }
+        } finally {
+            lock.unlock();
         }
+
+    }
+
+    private void whoIsThere() {
+        System.out.print("| ");
+        int wom = 0;
+        int men = 0;
+        for (Person p : inside) {
+            System.out.print(p.name + "|");
+            if (p.getGender() == 'W') {
+                wom++;
+            } else {
+                men++;
+            }
+        }
+        System.out.println("");
+        System.out.println("Woman: " + wom + " Men: " + men);
     }
 
 }

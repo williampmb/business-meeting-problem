@@ -55,5 +55,10 @@ public class Card {
         }
         return false;
     }
+    
+    @Override
+    public String toString(){
+        return "["+gender+""+idPeople+"]";
+    }
 
 }

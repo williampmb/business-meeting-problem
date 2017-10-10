@@ -14,9 +14,11 @@ public class BusinessMeetingProblem {
     /**
      * @param args the command line arguments
      */
+    //Throw an interrupt exception when all threads have entered but they cannot
+    //leave the room because of cards conditions.
     public static void main(String[] args) {
         Room r = Room.getInstance();
-        for (int i = 1; i < 11; i++) {
+        for (int i = 1; i < 21; i++) {
             Person p = new Person(i);
             new Thread(p).start();
         }

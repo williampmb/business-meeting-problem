@@ -27,19 +27,21 @@ public class Person implements Runnable {
     private char gender;
     private List<Card> cards;
 
+    Object cardsWatcher = new Object();
+
     Lock lock = new ReentrantLock();
 
     public Person(int id) {
         this.id = id;
-        name = "Thread " + this.id;
         this.free = false;
         gender = genenrateGender();
         cards = new ArrayList<Card>();
+        name = this.gender + " " + this.id;
     }
 
     @Override
     public void run() {
-        System.out.println("Executing " + name);
+        //System.out.println("Executing " + name);
         Room r = Room.getInstance();
 
         //it tries to enter in the room
@@ -49,18 +51,29 @@ public class Person implements Runnable {
             r.LookForTradeCards(this);
         }
 
+        synchronized (this) {
+            while (cards.size() != 3) {
+                //System.out.println(cards.size());
+                try {
+                    wait();
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Person.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+
         try {
-            Thread.sleep(4000);
+            // Thread.sleep(4000);
             System.out.println(name + " Trying to leave the room");
             leaveRoom(r);
-        } catch (InterruptedException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(Person.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
 
     public void enterRoom(Room r) {
-        System.out.println(name + " Trying to enter in the room");
+        //System.out.println(name + " Trying to enter in the room");
         inside = r.tryEnterIntoRoom(this);
     }
 
@@ -71,17 +84,17 @@ public class Person implements Runnable {
     private char genenrateGender() {
         Random rdm = new Random();
         double possibility = rdm.nextDouble();
-        if (possibility > 50) {
+        if (possibility > 0.50) {
             return 'M';
         }
         return 'W';
     }
 
     boolean itIsPossibleTradeCardWith(Person p) {
-        if (this.id == p.id || !p.isFree()) {
+        if (this.id == p.id || !p.isFree() || p.cards.size() > 2 || cards.size() >2) {
             return false;
         }
-        if(Card.containsId(p.cards, this.id) || Card.containsId(this.cards, p.id)){
+        if (Card.containsId(p.cards, this.id) || Card.containsId(this.cards, p.id)) {
             return false;
         }
         int thisNumbCardsOfGenderOfP = Card.checkNumberOfGender(cards, p.gender);
@@ -134,7 +147,15 @@ public class Person implements Runnable {
 
     void tradeCard(Person toTrade) throws InterruptedException {
         cards.add(new Card(toTrade.id, toTrade.gender));
-        Thread.sleep(2000);
+        printDeck();
+    }
+
+    private void printDeck() {
+        String deck = "";
+        for (Card c : cards) {
+            deck += c.toString() + "|";
+        }
+        System.out.print("\n" + name + " " + "Deck: |" + deck + "\n");
     }
 
 }
