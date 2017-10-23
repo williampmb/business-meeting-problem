@@ -38,20 +38,18 @@ public class Room {
         this.capacity = cap;
     }
 
-    boolean tryEnterIntoRoom(Person guest) {
+    boolean tryEnterIntoRoom(Person guest) throws InterruptedException {
         //it avoids two threads trying to access the same variable with synch method.
         //if the room is full, it waits until it gets more space.
         synchronized (doorMan) {
             while (inside.size() >= capacity) {
-                try {
-                    System.out.println("Room FULL " + guest.name);
-                    doorMan.wait();
-                    System.out.println(guest.name + " Trying again");
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(Room.class.getName()).log(Level.SEVERE, null, ex);
-                }
+
+                System.out.println("Room FULL " + guest.namePerson);
+                doorMan.wait();
+                System.out.println(guest.namePerson + " Trying again");
+
             }
-            System.out.println(guest.name + " Have Entered");
+            System.out.println(guest.namePerson + " Have Entered");
             lock.lock();
             try {
                 inside.add(guest);
@@ -75,10 +73,9 @@ public class Room {
                 lock.unlock();
             }
             doorMan.notifyAll();
-
         }
 
-        System.out.println(guest.name + " Left the ROOM. Opening a spot");
+        System.out.println(guest.namePerson + " Left the ROOM. Opening a spot");
     }
 
     void LookForTradeCards(Person guest) {
@@ -124,7 +121,7 @@ public class Room {
         int wom = 0;
         int men = 0;
         for (Person p : inside) {
-            System.out.print(p.name + "|");
+            System.out.print(p.namePerson + "|");
             if (p.getGender() == 'W') {
                 wom++;
             } else {

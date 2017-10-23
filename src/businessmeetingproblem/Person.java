@@ -17,11 +17,11 @@ import java.util.logging.Logger;
  *
  * @author willi
  */
-public class Person implements Runnable {
+public class Person extends Thread {
 
-    private boolean inside = false;
+    public boolean inside = false;
     int id;
-    String name;
+    String namePerson;
     private boolean free;
 
     private char gender;
@@ -36,16 +36,25 @@ public class Person implements Runnable {
         this.free = false;
         gender = genenrateGender();
         cards = new ArrayList<Card>();
-        name = this.gender + " " + this.id;
+        namePerson = this.gender + " " + this.id;
     }
 
     @Override
     public void run() {
-        //System.out.println("Executing " + name);
         Room r = Room.getInstance();
 
+        long startTime = System.currentTimeMillis();
+        long endTime = 0;
         //it tries to enter in the room
-        enterRoom(r);
+        try {
+            enterRoom(r);
+        } catch (InterruptedException e) {
+            Logger.getLogger(Person.class.getName()).log(Level.SEVERE, null, e);
+            String write = byebye(startTime, endTime);
+            BusinessMeetingProblem.pw.append(write);
+            BusinessMeetingProblem.pw.flush();
+            return;
+        }
 
         for (int times = 0; times < 3; times++) {
             r.LookForTradeCards(this);
@@ -53,32 +62,45 @@ public class Person implements Runnable {
 
         synchronized (this) {
             while (cards.size() != 3) {
-                //System.out.println(cards.size());
                 try {
                     wait();
                 } catch (InterruptedException ex) {
                     Logger.getLogger(Person.class.getName()).log(Level.SEVERE, null, ex);
+                    String write = byebye(startTime, endTime);
+                    BusinessMeetingProblem.pw.append(write);
+                    BusinessMeetingProblem.pw.flush();
+                    return;
                 }
             }
         }
 
         try {
-            // Thread.sleep(4000);
-            System.out.println(name + " Trying to leave the room");
+            System.out.println(namePerson + " Trying to leave the room");
             leaveRoom(r);
+            endTime = System.currentTimeMillis();
         } catch (Exception ex) {
             Logger.getLogger(Person.class.getName()).log(Level.SEVERE, null, ex);
         }
+        String write = byebye(startTime, endTime);
+        BusinessMeetingProblem.pw.append(write);
+        BusinessMeetingProblem.pw.flush();
 
     }
 
-    public void enterRoom(Room r) {
-        //System.out.println(name + " Trying to enter in the room");
+    public String byebye(long startTime, long endTime) {
+        String time = calculateTime(startTime, endTime);
+        String deck = printDeck();
+        String write = time + " " + deck + "\n";
+        return write;
+    }
+
+    public void enterRoom(Room r) throws InterruptedException {
         inside = r.tryEnterIntoRoom(this);
     }
 
     private void leaveRoom(Room r) {
         r.leaveTheRoom(this);
+        inside = false;
     }
 
     private char genenrateGender() {
@@ -91,7 +113,7 @@ public class Person implements Runnable {
     }
 
     boolean itIsPossibleTradeCardWith(Person p) {
-        if (this.id == p.id || !p.isFree() || p.cards.size() > 2 || cards.size() >2) {
+        if (this.id == p.id || !p.isFree() || p.cards.size() > 2 || cards.size() > 2) {
             return false;
         }
         if (Card.containsId(p.cards, this.id) || Card.containsId(this.cards, p.id)) {
@@ -137,25 +159,35 @@ public class Person implements Runnable {
         this.inside = inside;
     }
 
-    public String getName() {
-        return name;
+    public String getNamePerson() {
+        return namePerson;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNamePerson(String name) {
+        this.namePerson = name;
     }
 
     void tradeCard(Person toTrade) throws InterruptedException {
         cards.add(new Card(toTrade.id, toTrade.gender));
-        printDeck();
+        System.out.println(printDeck());
     }
 
-    private void printDeck() {
+    private String printDeck() {
         String deck = "";
         for (Card c : cards) {
             deck += c.toString() + "|";
         }
-        System.out.print("\n" + name + " " + "Deck: |" + deck + "\n");
+        //System.out.print("\n" + name + " " + "Deck: |" + deck + "\n");
+        return namePerson + " " + "Deck: |" + deck + "\n";
+    }
+
+    private String calculateTime(long start, long end) {
+        if (end == 0) {
+            return "Not Finished";
+        }
+
+        long time = (end - start) / 1000;
+        return time + " seconds";
     }
 
 }

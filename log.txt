@@ -1,0 +1,40 @@
+10 seconds M 1 Deck: |[M10]|[M9]|[W7]|
+
+12 seconds M 10 Deck: |[M1]|[M9]|[W7]|
+
+Not Finished W 18 Deck: |
+
+Not Finished W 2 Deck: |
+
+Not Finished M 16 Deck: |
+
+Not Finished W 7 Deck: |[M1]|[M10]|
+
+Not Finished W 12 Deck: |
+
+Not Finished W 17 Deck: |
+
+Not Finished W 5 Deck: |
+
+Not Finished M 6 Deck: |[M8]|[M11]|
+
+Not Finished M 4 Deck: |
+
+Not Finished W 13 Deck: |
+
+Not Finished M 9 Deck: |[M1]|[M10]|
+
+Not Finished M 11 Deck: |[M8]|[M6]|
+
+Not Finished W 19 Deck: |
+
+Not Finished W 20 Deck: |
+
+Not Finished W 14 Deck: |
+
+Not Finished M 15 Deck: |
+
+Not Finished M 3 Deck: |
+
+Not Finished M 8 Deck: |[M11]|[M6]|
+
