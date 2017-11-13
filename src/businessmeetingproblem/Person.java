@@ -49,7 +49,7 @@ public class Person extends Thread {
         try {
             enterRoom(r);
         } catch (InterruptedException e) {
-            Logger.getLogger(Person.class.getName()).log(Level.SEVERE, null, e);
+            //Logger.getLogger(Person.class.getName()).log(Level.SEVERE, null, e);
             String write = byebye(startTime, endTime);
             BusinessMeetingProblem.pw.append(write);
             BusinessMeetingProblem.pw.flush();
@@ -65,7 +65,7 @@ public class Person extends Thread {
                 try {
                     wait();
                 } catch (InterruptedException ex) {
-                    Logger.getLogger(Person.class.getName()).log(Level.SEVERE, null, ex);
+                    //Logger.getLogger(Person.class.getName()).log(Level.SEVERE, null, ex);
                     String write = byebye(startTime, endTime);
                     BusinessMeetingProblem.pw.append(write);
                     BusinessMeetingProblem.pw.flush();
@@ -79,7 +79,7 @@ public class Person extends Thread {
             leaveRoom(r);
             endTime = System.currentTimeMillis();
         } catch (Exception ex) {
-            Logger.getLogger(Person.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(Person.class.getName()).log(Level.SEVERE, null, ex);
         }
         String write = byebye(startTime, endTime);
         BusinessMeetingProblem.pw.append(write);

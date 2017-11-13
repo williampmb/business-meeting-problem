@@ -10,8 +10,11 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 /**
  *
@@ -46,13 +49,17 @@ public class BusinessMeetingProblem {
         Thread.enumerate(people);
 
         for (Thread p : people) {
-            p.interrupt();
+            if (p != null) {
+                p.interrupt();
+            }
         }
 
     }
 
     private static void writeReport() {
-        File log = new File("log.txt");
+        Date date = new Date();
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd_HHmm");
+        File log = new File("log"+df.format(date)+".txt");
 
         try {
             if (!log.exists()) {

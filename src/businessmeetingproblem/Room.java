@@ -25,7 +25,6 @@ public class Room {
     //locks
     private Object doorMan = new Object();
     Lock lock = new ReentrantLock();
-    private Object checkDisponibility = new Object();
 
     static Room getInstance() {
         if (room == null) {
@@ -100,7 +99,7 @@ public class Room {
                         toTrade.tradeCard(guest);
                         Thread.sleep(2000);
                     } catch (InterruptedException ex) {
-                        Logger.getLogger(Room.class.getName()).log(Level.SEVERE, null, ex);
+                        //Logger.getLogger(Room.class.getName()).log(Level.SEVERE, null, ex);
                     } finally {
                         toTrade.setFree(true);
                         guest.setFree(true);
