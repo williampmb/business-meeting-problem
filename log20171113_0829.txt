@@ -1,0 +1,40 @@
+12 seconds M 6 Deck: |[W1]|[W8]|[M7]|
+
+12 seconds M 7 Deck: |[W1]|[W8]|[M6]|
+
+12 seconds W 8 Deck: |[W1]|[M7]|[M6]|
+
+12 seconds W 1 Deck: |[W8]|[M7]|[M6]|
+
+26 seconds W 19 Deck: |[W3]|[M20]|[W18]|
+
+26 seconds W 3 Deck: |[W19]|[M20]|[W18]|
+
+30 seconds M 17 Deck: |[M20]|[W18]|[M2]|
+
+34 seconds W 18 Deck: |[W3]|[W19]|[M17]|
+
+34 seconds M 20 Deck: |[W3]|[W19]|[M17]|
+
+40 seconds M 2 Deck: |[M17]|[M5]|[W9]|
+
+44 seconds W 9 Deck: |[M2]|[M5]|[W15]|
+
+44 seconds M 5 Deck: |[M2]|[W9]|[M16]|
+
+48 seconds W 15 Deck: |[W9]|[M16]|[M4]|
+
+48 seconds M 16 Deck: |[M5]|[W15]|[M4]|
+
+56 seconds M 4 Deck: |[M16]|[W15]|[W14]|
+
+56 seconds W 10 Deck: |[W14]|[W13]|[M11]|
+
+56 seconds W 13 Deck: |[W14]|[W10]|[M11]|
+
+56 seconds W 14 Deck: |[M4]|[W13]|[W10]|
+
+Not Finished W 12 Deck: |
+
+Not Finished M 11 Deck: |[W13]|[W10]|
+

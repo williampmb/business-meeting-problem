@@ -8,10 +8,6 @@ package businessmeetingproblem;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -26,10 +22,6 @@ public class Person extends Thread {
 
     private char gender;
     private List<Card> cards;
-
-    Object cardsWatcher = new Object();
-
-    Lock lock = new ReentrantLock();
 
     public Person(int id) {
         this.id = id;
